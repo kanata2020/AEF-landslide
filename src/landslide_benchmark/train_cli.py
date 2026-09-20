@@ -22,7 +22,7 @@ def seed_everything(seed):
 
 def parser_for():
     defaults = dict(epochs=80, batch=12, lr=1e-3, weight_decay=1e-2, output=DEFAULT_OPTICAL_OUTPUT)
-    parser = argparse.ArgumentParser(description="Train the five-region optical segmentation model.")
+    parser = argparse.ArgumentParser(description="Train the optical segmentation baseline.")
     parser.add_argument("--split-json", type=Path, default=DEFAULT_SPLIT)
     parser.add_argument("--aef-dir", type=Path, default=DEFAULT_AEF_DIR)
     parser.add_argument("--s2-dir", type=Path, default=DEFAULT_S2_DIR)

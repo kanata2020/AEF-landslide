@@ -13,6 +13,21 @@ def event_key(event: Dict) -> tuple[str, str]:
     return str(event["region"]), str(event["event_id"])
 
 
+def resolve_s2_path(item: Dict, s2_dir: Path) -> Path:
+    value = item.get("S2", item.get("s2"))
+    if not value:
+        raise KeyError(f"Missing S2 path for {event_key(item)}")
+    path = Path(value)
+    if path.is_absolute() and path.is_file():
+        return path
+    if not path.is_absolute():
+        candidate = s2_dir / path
+        if candidate.is_file():
+            return candidate
+    region, identifier = event_key(item)
+    return s2_dir / f"{region}_s2_{identifier}.nc"
+
+
 def load_split(split_path: Path, aef_dir: Path, s2_dir: Optional[Path] = None) -> Dict[str, List[Dict]]:
     with open(split_path, "r", encoding="utf-8") as handle:
         raw = json.load(handle)
@@ -24,12 +39,7 @@ def load_split(split_path: Path, aef_dir: Path, s2_dir: Optional[Path] = None) -
         events = []
         for item in raw[split_name]:
             region, event_id = event_key(item)
-            s2_value = item.get("S2", item.get("s2"))
-            if not s2_value:
-                raise KeyError(f"Missing S2 path for {region}-{event_id}")
-            s2_path = Path(s2_value)
-            if s2_dir is not None and not s2_path.is_file():
-                s2_path = s2_dir / f"{region}_s2_{event_id}.nc"
+            s2_path = resolve_s2_path(item, s2_dir if s2_dir is not None else split_path.parent)
             events.append(
                 {
                     "region": region,

@@ -16,7 +16,6 @@ from .paths import (
     DEFAULT_S2_DIR,
     DEFAULT_SPATIOTEMPORAL_OUTPUT,
     DEFAULT_SPLIT,
-    LEGACY_AEF_CHECKPOINT,
 )
 from .spatiotemporal_data import AEFSpatioTemporalDataset, TEMPORAL_CLASSES, load_or_compute_statistics
 from .spatiotemporal_model import AEFSpatioTemporalNet, JointLoss
@@ -170,7 +169,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--amp", action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument("--device", choices=("auto", "cuda", "cpu"), default="auto")
     parser.add_argument("--seed", type=int, default=42)
-    parser.add_argument("--spatial-init", type=Path, default=LEGACY_AEF_CHECKPOINT)
+    parser.add_argument("--spatial-init", type=Path, default=None)
     parser.add_argument("--no-spatial-init", action="store_true", help="Train the spatial path from scratch.")
     parser.add_argument("--augment", action=argparse.BooleanOptionalAction, default=False)
     parser.add_argument("--limit-train", type=int, help="Smoke-test only; changes the fitted statistics.")
@@ -225,7 +224,7 @@ def main() -> None:
     last_path = args.output_dir / "last.pth"
     resume_available = last_path.is_file() and not args.force_train
     spatial_warm_started = False
-    if not resume_available and not args.no_spatial_init:
+    if not resume_available and not args.no_spatial_init and args.spatial_init is not None:
         if args.spatial_init.is_file():
             spatial_checkpoint = torch.load(args.spatial_init, map_location="cpu", weights_only=False)
             spatial_state = spatial_checkpoint.get("model_state_dict", spatial_checkpoint)
@@ -233,7 +232,7 @@ def main() -> None:
             spatial_warm_started = True
             print(f"Initialized spatial path from: {args.spatial_init}")
         else:
-            print(f"Spatial initialization checkpoint not found; training from scratch: {args.spatial_init}")
+            raise FileNotFoundError(f"Spatial initialization checkpoint not found: {args.spatial_init}")
 
     spatial_parameters = list(model.stem.parameters()) + list(model.body.parameters()) + list(model.head.parameters())
     temporal_parameters = list(model.temporal_branch.parameters())

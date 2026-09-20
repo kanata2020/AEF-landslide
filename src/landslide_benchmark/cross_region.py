@@ -16,7 +16,7 @@ import torch
 import xarray as xr
 from torch.utils.data import DataLoader, Dataset
 
-from .data import OpticalMaskDataset, event_key, validate_split
+from .data import OpticalMaskDataset, event_key, validate_split, resolve_s2_path
 from .metrics import add_counts, confusion_counts, detailed_metrics, empty_counts
 from .models import UNet3D
 from .paths import DEFAULT_AEF_DIR, DEFAULT_S2_DIR, DEFAULT_SPLIT, PACKAGE_ROOT
@@ -109,9 +109,7 @@ def collect_events(split_path, aef_dir, s2_dir):
             if (region, identifier) in seen:
                 raise ValueError(f"Duplicate event in input inventory: {region}/{identifier}")
             seen.add((region, identifier))
-            s2 = Path(item.get("S2", item.get("s2", "")))
-            if not s2.is_file():
-                s2 = s2_dir / f"{region}_s2_{identifier}.nc"
+            s2 = resolve_s2_path(item, s2_dir)
             grouped[region].append({
                 "region": region, "event_id": identifier,
                 "AEF": str((aef_dir / f"{region}_AEF_{identifier}.tif").resolve()),

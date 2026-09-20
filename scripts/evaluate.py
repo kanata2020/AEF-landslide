@@ -15,7 +15,6 @@ from landslide_benchmark.paths import (
     DEFAULT_OPTICAL_OUTPUT,
     DEFAULT_S2_DIR,
     DEFAULT_SPLIT,
-    LEGACY_OPTICAL_CHECKPOINT,
     PACKAGE_ROOT,
 )
 
@@ -38,9 +37,7 @@ def parse_args():
 
 
 def default_checkpoint():
-    new_path = DEFAULT_OPTICAL_OUTPUT / "best.pth"
-    legacy = LEGACY_OPTICAL_CHECKPOINT
-    return new_path if new_path.is_file() else legacy
+    return DEFAULT_OPTICAL_OUTPUT / "best.pth"
 
 
 def load_model(checkpoint, device):

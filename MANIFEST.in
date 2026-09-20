@@ -1,0 +1,4 @@
+include README.md README.zh-CN.md
+recursive-include splits *.json
+recursive-include scripts *.py
+recursive-include tests *.py

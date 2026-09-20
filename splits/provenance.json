@@ -1,0 +1,23 @@
+{
+  "source_project": "Sen12Landslides-main",
+  "source_relative_path": "outputs/landdetect_3dcnn/splits/dataset_split_resolved.json",
+  "source_sha256": "7cb75b7ba7ee39f4097b80e6be38bd0e2e257f7acbe7730cde482384d5e5ab5a",
+  "path_transformation": "Absolute S2 paths replaced by basenames; event IDs, order and original assignments preserved.",
+  "default_derivation": "dataset_split_four_regions.json filters region == italy without reshuffling.",
+  "files": {
+    "dataset_split_resolved.json": {
+      "sha256": "9237474283cde24cb9de6b70013f63904411cb7e305f268a1627c4e07112771d",
+      "counts": {
+        "train": 2095,
+        "val": 898
+      }
+    },
+    "dataset_split_four_regions.json": {
+      "sha256": "138b08ca30ea0a12bfe53803e6a9bb154d78cde97e519367acbaa67e977331c8",
+      "counts": {
+        "train": 1687,
+        "val": 743
+      }
+    }
+  }
+}

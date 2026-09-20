@@ -184,8 +184,8 @@ def main():
             for region in sorted(region_spatial)
         },
         "methodological_note": (
-            "Missing or invalid dates are assigned to class 13 (no-event). Only four calendar months occur in this "
-            "split, and month is strongly confounded with region; compare accuracy with the region-mode baseline "
+            "Missing or invalid dates are assigned to class 13 (no-event). Calendar-month coverage depends on the "
+            "selected split, and month may be confounded with region; compare accuracy with the region-mode baseline "
             "and inspect no_event_samples_with_positive_mask for label conflicts."
         ),
     }

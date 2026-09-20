@@ -13,3 +13,13 @@ outputs/**/*.json
 *.log
 .DS_Store
 Thumbs.db
+
+# Local imagery, checkpoints, and experiment exports; keep splits/ tracked.
+data/
+checkpoints/
+*.pth
+*.ckpt
+outputs/**/*.csv
+outputs/**/*.tex
+build/
+dist/
